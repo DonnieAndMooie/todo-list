@@ -1,1 +1,1 @@
-# todo-list
+The aim of this project is to create a simple todo list app
