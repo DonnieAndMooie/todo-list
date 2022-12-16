@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+</head>
+<body>
+    <div class="sidebar">
+        <h1>Projects</h1>
+    </div>
+    <div class="todo">
+        <h1>To-Do List</h1>
+        <div class="formdiv hide">
+            <form class="form">
+                <h2>New To-Do</h2>
+                <fieldset>
+                    <label for="title">Title:</label>
+                    <input type="text" id="title" name="title" required>
+                </fieldset>
+                <fieldset class="formDescription">
+                    <label for="description">Description:</label>
+                    <textarea name="description" id="description" cols="66" rows="3"></textarea>
+                </fieldset>
+                <fieldset>
+                    <label for="dueDate">Due Date:</label>
+                    <input type="date" id="dueDate" name="dueDate" required>
+                </fieldset>
+                <fieldset>
+                    <label for="priority">Priority:</label>
+                    <select name="Priority" id="priority">
+                        <option value="High">High</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Low">Low</option>
+                    </select>
+                </fieldset>
+                <fieldset class="formNotes">
+                    <label for="notes">Notes: </label>
+                    <textarea name="notes" id="notes" cols="70" rows="5"></textarea>
+                </fieldset>
+                <fieldset class="buttonField">
+                <button type="submit" class="submit">Add To-Do</button>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+    <button class="add" type="button">+</button>
+    <script src="main.js"></script>
+</body>
+</html>
