@@ -8,13 +8,15 @@
 </head>
 <body>
     <div class="sidebar">
-        <h1>Projects</h1>
+        <h1 class="sidebar-header">Projects</h1>
+        <div class="projects-div"></div>
+        <button class="add-project">+</button>
     </div>
     <div class="todo">
         <h1>To-Do List</h1>
         <div class="formdiv hide">
             <form class="form">
-                <h2>New To-Do</h2>
+                <h2 class="form-header">New To-Do</h2>
                 <fieldset>
                     <label for="title">Title:</label>
                     <input type="text" id="title" name="title" required>
@@ -42,6 +44,19 @@
                 <fieldset class="buttonField">
                 <button type="submit" class="submit">Add To-Do</button>
                 </fieldset>
+            </form>
+        </div>
+        <div class="project-formdiv hide">
+            <form class="project-form">
+                <h2>New Project</h2>
+                <fieldset>
+                    <label for="title">Title:</label>
+                    <input type="text" name="title" id="project-title">
+                </fieldset>
+                <fieldset class="project-button">
+                    <button class="create-project">Create Project</button>
+                </fieldset>
+                
             </form>
         </div>
     </div>
