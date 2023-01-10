@@ -1,18 +1,45 @@
+import { changeProject, deleteProject, deleteToDo, editToDo } from "./listeners";
+import {format, parseISO } from './../node_modules/date-fns'
+
 const formDiv = document.querySelector(".formdiv")
 const projectFormDiv = document.querySelector(".project-formdiv")
 
-function createProjectCard(project){
+
+//Create a new project card
+function createProjectCard(project, currentProject){
     const sidebar = document.querySelector(".sidebar");
     const projectsDiv = document.querySelector(".projects-div")
     const btn = document.querySelector(".add-project")
-    const projectCard = document.createElement("a");
-    projectCard.textContent = project.title;
-    projectCard.classList.add("project");
-    projectCard.href = "#"
+    const projectCard = document.createElement("div");
+    projectCard.classList.add("projectCard")
+    const projectLink = document.createElement("a")
+    projectLink.textContent = project.title;
+    projectLink.classList.add("project");
+    projectLink.href = "#"
     projectsDiv.appendChild(projectCard)
+    projectCard.appendChild(projectLink)
 
-}
+    const deleteBtn = document.createElement("button")
+    deleteBtn.textContent = "X"
+    deleteBtn.classList.add("deleteBtn")
+    deleteBtn.classList.add("deleteProjectBtn")
+    projectCard.appendChild(deleteBtn)
 
+    projectLink.addEventListener("click", (currentProject)=>{
+        currentProject = changeProject(project, currentProject)
+        return currentProject
+        
+    })
+
+    deleteBtn.addEventListener("click", ()=>{
+        deleteProject(projectCard)
+        clearToDos()
+    })
+
+    return {projectCard, currentProject}
+} 
+
+//Create a new todo card
 function createToDoCard(todo){
     const todoDiv = document.querySelector(".todo")
     const todoCard = document.createElement("div")
@@ -25,7 +52,7 @@ function createToDoCard(todo){
     todoCardDescription.classList.add("description")
     todoCard.appendChild(todoCardDescription)
     const todoCardDueDate = document.createElement("p")
-    todoCardDueDate.textContent = "Due: " + todo.dueDate
+    todoCardDueDate.textContent = "Due: " + format(parseISO(todo.dueDate), "PPP")
     todoCardDueDate.classList.add("date")
     todoCard.appendChild(todoCardDueDate)
     const todoCardPriority = document.createElement("p")
@@ -59,69 +86,51 @@ function createToDoCard(todo){
     todoCard.appendChild(deleteBtn)
 
     deleteBtn.addEventListener("click", ()=>{
-        todoCard.innerText = ""})
-
-    editBtn.addEventListener("click", ()=>{
-        todoCard.innerText = ""
-        const formHeader = document.querySelector(".form-header")
-        const formBtn = document.querySelector(".submit")
-        const titleInput = document.getElementById("title")
-        const descriptionInput = document.getElementById("description")
-        const dateInput = document.getElementById("dueDate")
-        const priorityInput = document.getElementById("priority")
-        const notesInput = document.getElementById("notes")
-        formHeader.textContent = "Edit To-Do"
-        formBtn.textContent = "Confirm Changes"
-        titleInput.value = todo.title
-        descriptionInput.value = todo.description
-        dateInput.value = todo.dueDate
-        priorityInput.value = todo.priority
-        notesInput.value = todo.notes
-        toggleForm()
-
-        
+        deleteToDo(todoCard)
     })
 
-    
+    editBtn.addEventListener("click", ()=>{
+        editToDo(todo, todoCard)
+    })
 
 }
-
-
+//Add event listener to add todo button
 function formPopUp(){
     const addBtn = document.querySelector(".add")
-    const form = document.querySelector(".form")
-
-
-    addBtn.addEventListener("click", toggleForm)
-    form.addEventListener("submit", ()=>{
-        event.preventDefault()
-        clearToDos()
+    addBtn.addEventListener("click", ()=>{
         toggleForm()
-        changeProject()
     })
     }
 
+
+//Toggles if form is displayed and hides all todos
 function toggleForm(){
     formDiv.classList.toggle("hide")
     const todos = document.querySelectorAll(".card")
-    for (const card of todos){
-        card.classList.add("hide")
-    }}
+    if (formDiv.classList.contains("hide")){
+        for (const card of todos){
+            card.classList.toggle("hide")
+        }
+}   
+    else{
+        for (const card of todos){
+            card.classList.add("hide")
+        }
+    }
+}
 
+//Add event listener to add project button
 function projectFormPopUp(){
     const addBtn = document.querySelector(".add-project")
-    const form = document.querySelector(".project-form")
-
-    addBtn.addEventListener("click", toggleProjectForm)
-    form.addEventListener("submit", ()=>{
-        clearToDos()
-        event.preventDefault()
+    addBtn.addEventListener("click", ()=>{
         toggleProjectForm()
-        changeProject()
-        })
+        clearToDos()
+    })
     }
 
+//Toggle if project form is displayed and toggles all todos
 function toggleProjectForm(){
+    const projectFormDiv = document.querySelector(".project-formdiv")
     projectFormDiv.classList.toggle("hide")
     const todos = document.querySelectorAll(".card")
     for (const card of todos){
@@ -129,7 +138,7 @@ function toggleProjectForm(){
     }
 }
 
-
+//Remove all todos from display
 function clearToDos(){
     const cards = document.querySelectorAll(".card")
     for (const card of cards){
@@ -137,24 +146,17 @@ function clearToDos(){
     }
 }
 
-function changeProject(){
-    const projects = document.querySelectorAll(".project")
-    for (const project of projects){
-        project.addEventListener("click", ()=>{
-            clearToDos()
-            const cards = document.querySelectorAll(".card")
-            for (const card of cards){
-                if (card.getAttribute("project") === project.textContent){
-                    card.classList.remove("hide")
-                }
-                else{
-                    card.classList.add("hide")
-                }
-            }
-            }
-            )
-        }
+//Show all todos
+function showToDos(){
+    const cards = document.querySelectorAll(".card")
+    for (const card of cards){
+        card.classList.remove("hide")
+    }
 }
 
-export { createProjectCard, createToDoCard, formPopUp, projectFormPopUp, clearToDos, changeProject }
+
+
+
+
+export { createProjectCard, createToDoCard, formPopUp, projectFormPopUp, clearToDos, toggleForm, toggleProjectForm, showToDos }
 
