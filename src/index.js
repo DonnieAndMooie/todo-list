@@ -16,11 +16,13 @@ Object.setPrototypeOf(test, defaultProject)
 createProjectCard(defaultProject, currentProject)
 createToDoCard(test)
 
+loadFromStorage()
 
 
 const form = document.querySelector(".form")
 form.addEventListener("submit", ()=>{
     event.preventDefault()
+    console.log(currentProject)
     addToDoFormSubmit(currentProject)
 })
 
@@ -41,3 +43,32 @@ showToDos()
 
 document.querySelector(".project").click()
 
+
+function loadFromStorage(){
+    Object.keys(localStorage).forEach(function(key){
+        const todoConverted = JSON.parse(localStorage.getItem(key))
+        Object.setPrototypeOf(todoConverted, todoConverted.project)
+        const projectsList = createArrayOfProjects()
+
+        createToDoCard(todoConverted)
+        if (!projectsList.includes(todoConverted.project.title)){
+            const newProject = new Project(todoConverted.project.title)
+            createProjectCard(newProject, currentProject).currentProject
+        }
+        return currentProject
+    })
+}
+
+
+function createArrayOfProjects(){
+    const projectCards = document.querySelectorAll(".project")
+        let projectsList = []
+        for (const item of projectCards){
+            const projectTitle = item.textContent
+            projectsList.push(projectTitle)
+        }
+        return projectsList
+}
+
+
+currentProject = changeProject(defaultProject, currentProject)

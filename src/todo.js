@@ -10,7 +10,7 @@ class ToDo{
 }
 
 //Returns a todo object
-function createNewToDo(){
+function createNewToDo(currentProject){
     const title = document.getElementById("title").value
     const description = document.getElementById("description").value
     const dueDate = document.getElementById("dueDate").value
@@ -18,6 +18,9 @@ function createNewToDo(){
     const  priority = document.getElementById("priority").value
     const notes = document.getElementById("notes").value
     const newToDo = new ToDo(title, description, dueDate, priority, notes)
+    Object.setPrototypeOf(newToDo, currentProject)
+    newToDo.project = currentProject
+    localStorage.setItem(title, JSON.stringify(newToDo))
     return newToDo
 }
 

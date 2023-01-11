@@ -32,7 +32,7 @@ function createProjectCard(project, currentProject){
     })
 
     deleteBtn.addEventListener("click", ()=>{
-        deleteProject(projectCard)
+        deleteProject(projectCard, project)
         clearToDos()
     })
 
@@ -86,12 +86,14 @@ function createToDoCard(todo){
     todoCard.appendChild(deleteBtn)
 
     deleteBtn.addEventListener("click", ()=>{
-        deleteToDo(todoCard)
+        deleteToDo(todoCard, todo)
     })
 
     editBtn.addEventListener("click", ()=>{
         editToDo(todo, todoCard)
+        localStorage.removeItem(todo.title)
     })
+    
 
 }
 //Add event listener to add todo button

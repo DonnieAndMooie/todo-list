@@ -2,10 +2,10 @@ import {createNewToDo} from './todo';
 import {createToDoCard, createProjectCard, clearToDos, toggleForm, toggleProjectForm} from './DOM';
 import {createNewProject} from './project';
 
+
 //Creates new todo card when form is submitted
 function addToDoFormSubmit(currentProject){
-    const newToDo = createNewToDo()
-    Object.setPrototypeOf(newToDo, currentProject)
+    const newToDo = createNewToDo(currentProject)
     createToDoCard(newToDo)
     const form = document.querySelector(".form")
     form.reset()
@@ -51,12 +51,22 @@ function changeProject(project, currentProject){
 }
 
 //Delete todo
-function deleteToDo(todoCard){
+function deleteToDo(todoCard, todo){
     todoCard.innerText = ""
+    localStorage.removeItem(todo.title)
 }
 
 //Delete Project
-function deleteProject(projectCard){
+function deleteProject(projectCard, project){
+    const todoCards = document.querySelectorAll(".card")
+    for(const card of todoCards){
+        const projectAttribute = card.getAttribute("project")
+        if (project.title === projectAttribute){
+            const cardTitle = card.firstElementChild.textContent
+            localStorage.removeItem(cardTitle)
+            card.innerHTML = ""
+        }
+    }
     projectCard.innerText = ""
 }
 
