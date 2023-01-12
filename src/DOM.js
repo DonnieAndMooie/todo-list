@@ -6,7 +6,7 @@ const projectFormDiv = document.querySelector(".project-formdiv")
 
 
 //Create a new project card
-function createProjectCard(project, currentProject){
+function createProjectCard(project){
     const sidebar = document.querySelector(".sidebar");
     const projectsDiv = document.querySelector(".projects-div")
     const btn = document.querySelector(".add-project")
@@ -25,9 +25,8 @@ function createProjectCard(project, currentProject){
     deleteBtn.classList.add("deleteProjectBtn")
     projectCard.appendChild(deleteBtn)
 
-    projectLink.addEventListener("click", (currentProject)=>{
-        currentProject = changeProject(project, currentProject)
-        return currentProject
+    projectLink.addEventListener("click", ()=>{
+        changeProject(project)
         
     })
 
@@ -36,7 +35,8 @@ function createProjectCard(project, currentProject){
         clearToDos()
     })
 
-    return {projectCard, currentProject}
+    changeProject(project, currentProject)
+    return {projectCard}
 } 
 
 //Create a new todo card

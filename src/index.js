@@ -9,11 +9,11 @@ import { changeProject } from './listeners';
 const test = new ToDo("Walk", "Round the block", "2002-10-21", "High", "No notes")
 const defaultProject = new Project("My Project")
 
-let currentProject = defaultProject
+global.currentProject = defaultProject
 Object.setPrototypeOf(test, defaultProject)
 
 
-createProjectCard(defaultProject, currentProject)
+createProjectCard(defaultProject)
 createToDoCard(test)
 
 loadFromStorage()
@@ -22,16 +22,14 @@ loadFromStorage()
 const form = document.querySelector(".form")
 form.addEventListener("submit", ()=>{
     event.preventDefault()
-    console.log(currentProject)
-    addToDoFormSubmit(currentProject)
+    addToDoFormSubmit()
 })
 
 
 const projectForm = document.querySelector(".project-form")
 projectForm.addEventListener("submit", ()=>{
     event.preventDefault()
-    currentProject = addProjectFormSubmit(currentProject)
-    return currentProject
+    addProjectFormSubmit()
 })
 
 
@@ -50,13 +48,19 @@ function loadFromStorage(){
         Object.setPrototypeOf(todoConverted, todoConverted.project)
         const projectsList = createArrayOfProjects()
 
-        createToDoCard(todoConverted)
+        
         if (!projectsList.includes(todoConverted.project.title)){
             const newProject = new Project(todoConverted.project.title)
-            createProjectCard(newProject, currentProject).currentProject
+            createProjectCard(newProject)
+            createToDoCard(todoConverted)
         }
-        return currentProject
+        else{
+            changeProject(todoConverted.project)
+            createToDoCard(todoConverted)
+        }
+        
     })
+    changeProject(defaultProject)
 }
 
 
@@ -71,4 +75,3 @@ function createArrayOfProjects(){
 }
 
 
-currentProject = changeProject(defaultProject, currentProject)

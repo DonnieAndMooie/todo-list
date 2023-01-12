@@ -4,8 +4,8 @@ import {createNewProject} from './project';
 
 
 //Creates new todo card when form is submitted
-function addToDoFormSubmit(currentProject){
-    const newToDo = createNewToDo(currentProject)
+function addToDoFormSubmit(){
+    const newToDo = createNewToDo()
     createToDoCard(newToDo)
     const form = document.querySelector(".form")
     form.reset()
@@ -21,9 +21,9 @@ function addToDoFormSubmit(currentProject){
 }
 
 //Creates new project card when form is submitted
-function addProjectFormSubmit(currentProject){
+function addProjectFormSubmit(){
     const newProject = createNewProject()
-    const newProjectCard = createProjectCard(newProject, currentProject).projectCard
+    const newProjectCard = createProjectCard(newProject).projectCard
     currentProject = newProject
     const projectForm = document.querySelector(".project-form")
     projectForm.reset()
@@ -31,11 +31,10 @@ function addProjectFormSubmit(currentProject){
     toggleProjectForm()
     newProjectCard.click()
     changeProject(currentProject)
-    return currentProject
 }
 
 //Change to display a different project
-function changeProject(project, currentProject){
+function changeProject(project){
     clearToDos()
     const cards = document.querySelectorAll(".card")
     for (const card of cards){
@@ -47,7 +46,6 @@ function changeProject(project, currentProject){
         }
     }
     currentProject = project
-    return currentProject
 }
 
 //Delete todo
