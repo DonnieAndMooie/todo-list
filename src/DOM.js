@@ -1,5 +1,5 @@
 import { changeProject, deleteProject, deleteToDo, editToDo } from "./listeners";
-import {format, parseISO } from './../node_modules/date-fns'
+import {format, parseISO } from 'date-fns'
 
 const formDiv = document.querySelector(".formdiv")
 const projectFormDiv = document.querySelector(".project-formdiv")
@@ -13,6 +13,7 @@ function createProjectCard(project){
     const projectCard = document.createElement("div");
     projectCard.classList.add("projectCard")
     const projectLink = document.createElement("a")
+    //console.log(project)
     projectLink.textContent = project.title;
     projectLink.classList.add("project");
     projectLink.href = "#"
@@ -40,7 +41,7 @@ function createProjectCard(project){
 } 
 
 //Create a new todo card
-function createToDoCard(todo){
+function createToDoCard(todo, project){
     const todoDiv = document.querySelector(".todo")
     const todoCard = document.createElement("div")
     todoCard.classList.add("card")
@@ -61,7 +62,12 @@ function createToDoCard(todo){
     const todoCardNotes = document.createElement("p")
     todoCardNotes.textContent = "Notes: " + todo.notes
     todoCard.appendChild(todoCardNotes)
-    todoCard.setAttribute("project", Object.getPrototypeOf(todo).title )
+    if (project){
+        todoCard.setAttribute("project", project)
+    }
+    else{
+        todoCard.setAttribute("project", todo.project)
+    }
     todoDiv.appendChild(todoCard)
 
     if (todo.priority === "High"){
@@ -111,7 +117,7 @@ function toggleForm(){
     const todos = document.querySelectorAll(".card")
     if (formDiv.classList.contains("hide")){
         for (const card of todos){
-            card.classList.toggle("hide")
+            card.classList.remove("hide")
         }
 }   
     else{
@@ -156,9 +162,16 @@ function showToDos(){
     }
 }
 
+function deleteAllTodos(){{
+    const todos = document.querySelectorAll(".card")
+    for (const todo of todos){
+        todo.innerHTML = ""
+    }
+}}
 
 
 
 
-export { createProjectCard, createToDoCard, formPopUp, projectFormPopUp, clearToDos, toggleForm, toggleProjectForm, showToDos }
+
+export { createProjectCard, createToDoCard, formPopUp, projectFormPopUp, clearToDos, toggleForm, toggleProjectForm, showToDos, deleteAllTodos }
 

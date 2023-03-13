@@ -1,12 +1,13 @@
 import './styles.css';
-import {ToDo, createNewToDo} from './todo';
+import {ToDoConstructor, createNewToDo} from './todo';
 import {Project, createNewProject} from './project';
-import { createProjectCard, createToDoCard, formPopUp, projectFormPopUp, clearToDos, toggleForm, toggleProjectForm, showToDos } from './DOM';
+import { createProjectCard, createToDoCard, formPopUp, projectFormPopUp, clearToDos, toggleForm, toggleProjectForm, showToDos, deleteAllTodos } from './DOM';
 import { addToDoFormSubmit, addProjectFormSubmit } from './listeners';
 import { changeProject } from './listeners';
 
 import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
+import { collection, addDoc, query, orderBy, limit, onSnapshot, setDoc, updateDoc, doc, serverTimestamp, getDoc, getFirestore } from 'firebase/firestore'
 
 const firebaseConfig = {
     apiKey: "AIzaSyDQSMs0np2tg7IBCMYdAr2pmSBr3fXjzVw",
@@ -25,13 +26,16 @@ const profilePic = document.querySelector(".profile-pic")
 const usernameDiv = document.querySelector(".username")
 
 async function signIn(){
+    deleteAllTodos()
     const provider = new GoogleAuthProvider();
     await signInWithPopup(getAuth(), provider); 
 
 }
 
 function signOutUser(){
+    deleteAllTodos()
     signOut(getAuth())
+    
 }
 
 function getProfilePicUrl(){
@@ -41,6 +45,8 @@ function getProfilePicUrl(){
 function getUserName(){
     return getAuth().currentUser.displayName
 }
+
+let uid
 
 function authStateObserver(user){
     if (user){
@@ -52,12 +58,16 @@ function authStateObserver(user){
         profilePic.classList.remove("hide")
         usernameDiv.classList.remove("hide")
         signOutBtn.classList.remove("hide")
+        uid = user.uid
+        loadFromStorage(uid)
     }
     else{
         usernameDiv.classList.add("hide")
         profilePic.classList.add("hide")
         signInBtn.classList.remove("hide")
         signOutBtn.classList.add("hide")
+        uid = null
+        loadFromStorage(uid)
     }
 }
 
@@ -69,23 +79,23 @@ initFirebaseAuth()
 signInBtn.addEventListener("click", signIn)
 signOutBtn.addEventListener("click", signOutUser)
 
-const test = new ToDo("Walk", "Round the block", "2002-10-21", "High", "No notes")
+//const test = new ToDo("Walk", "Round the block", "2002-10-21", "High", "No notes")
 const defaultProject = new Project("My Project")
 
 global.currentProject = defaultProject
-Object.setPrototypeOf(test, defaultProject)
+//Object.setPrototypeOf(test, defaultProject)
 
 
 createProjectCard(defaultProject)
-createToDoCard(test)
+//createToDoCard(test)
 
-loadFromStorage()
+
 
 
 const form = document.querySelector(".form")
 form.addEventListener("submit", ()=>{
     event.preventDefault()
-    addToDoFormSubmit()
+    addToDoFormSubmit(uid)
 })
 
 
@@ -105,23 +115,24 @@ showToDos()
 document.querySelector(".project").click()
 
 
-function loadFromStorage(){
-    Object.keys(localStorage).forEach(function(key){
-        const todoConverted = JSON.parse(localStorage.getItem(key))
-        Object.setPrototypeOf(todoConverted, todoConverted.project)
-        const projectsList = createArrayOfProjects()
-
-        
-        if (!projectsList.includes(todoConverted.project.title)){
-            const newProject = new Project(todoConverted.project.title)
-            createProjectCard(newProject)
-            createToDoCard(todoConverted)
-        }
-        else{
-            changeProject(todoConverted.project)
-            createToDoCard(todoConverted)
-        }
-        
+function loadFromStorage(uid){
+    const createdProjects = [defaultProject.title]
+    const todosQuery = query(collection(getFirestore(), 'todos'))
+    onSnapshot(todosQuery, function(snapshot) {
+        snapshot.docChanges().forEach(function(change){
+            const todo = change.doc.data()
+            if (todo.uid === uid){
+                const project = JSON.parse(todo.project)
+                if (!createdProjects.includes(project.title)){
+                    console.log(project)
+                    createProjectCard(project)
+                    createdProjects.push(project.title)
+                }
+                changeProject(project)
+                
+                createToDoCard(todo, project.title)
+            }
+        })
     })
     changeProject(defaultProject)
 }

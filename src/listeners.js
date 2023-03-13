@@ -4,8 +4,8 @@ import {createNewProject} from './project';
 
 
 //Creates new todo card when form is submitted
-function addToDoFormSubmit(){
-    const newToDo = createNewToDo()
+async function addToDoFormSubmit(uid){
+    const newToDo =  await createNewToDo(uid)
     createToDoCard(newToDo)
     const form = document.querySelector(".form")
     form.reset()
@@ -60,8 +60,6 @@ function deleteProject(projectCard, project){
     for(const card of todoCards){
         const projectAttribute = card.getAttribute("project")
         if (project.title === projectAttribute){
-            const cardTitle = card.firstElementChild.textContent
-            localStorage.removeItem(cardTitle)
             card.innerHTML = ""
         }
     }
