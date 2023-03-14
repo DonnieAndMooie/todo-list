@@ -42,6 +42,7 @@ function createProjectCard(project){
 
 //Create a new todo card
 function createToDoCard(todo, project){
+    console.log("creating card " + todo.title)
     const todoDiv = document.querySelector(".todo")
     const todoCard = document.createElement("div")
     todoCard.classList.add("card")

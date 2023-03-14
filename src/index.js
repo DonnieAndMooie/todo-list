@@ -124,7 +124,6 @@ function loadFromStorage(uid){
             if (todo.uid === uid){
                 const project = JSON.parse(todo.project)
                 if (!createdProjects.includes(project.title)){
-                    console.log(project)
                     createProjectCard(project)
                     createdProjects.push(project.title)
                 }
@@ -148,4 +147,6 @@ function createArrayOfProjects(){
         return projectsList
 }
 
+const firestore = getFirestore()
 
+export { firestore }

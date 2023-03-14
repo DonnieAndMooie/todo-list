@@ -1,10 +1,12 @@
 import {createNewToDo} from './todo';
 import {createToDoCard, createProjectCard, clearToDos, toggleForm, toggleProjectForm} from './DOM';
 import {createNewProject} from './project';
-
+import { collection, deleteDoc, doc, getFirestore, query, onSnapshot, where, getDoc } from 'firebase/firestore';
+import { firestore } from '.';
 
 //Creates new todo card when form is submitted
 async function addToDoFormSubmit(uid){
+    console.log("form submitted")
     const newToDo =  await createNewToDo(uid)
     createToDoCard(newToDo)
     const form = document.querySelector(".form")
@@ -49,10 +51,13 @@ function changeProject(project){
 }
 
 //Delete todo
-function deleteToDo(todoCard, todo){
-    todoCard.innerText = ""
-    localStorage.removeItem(todo.title)
+async function deleteToDo(todoCard, todo){
+    todoCard.innerHTML = ""
+    const docRef = await doc(firestore, "todos", todo.title)
+    await deleteDoc(docRef)
 }
+
+
 
 //Delete Project
 function deleteProject(projectCard, project){
