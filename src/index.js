@@ -93,9 +93,9 @@ createProjectCard(defaultProject)
 
 
 const form = document.querySelector(".form")
-form.addEventListener("submit", ()=>{
+form.addEventListener("submit", async ()=>{
     event.preventDefault()
-    addToDoFormSubmit(uid)
+    await addToDoFormSubmit(uid)
 })
 
 
@@ -115,11 +115,14 @@ showToDos()
 document.querySelector(".project").click()
 
 
-function loadFromStorage(uid){
+async function loadFromStorage(uid){
     const createdProjects = [defaultProject.title]
-    const todosQuery = query(collection(getFirestore(), 'todos'))
-    onSnapshot(todosQuery, function(snapshot) {
+    const todosQuery = await query(collection(getFirestore(), 'todos'))
+    await onSnapshot(todosQuery, function(snapshot) {
         snapshot.docChanges().forEach(function(change){
+            if (change.type === "removed"){
+                return
+            }
             const todo = change.doc.data()
             if (todo.uid === uid){
                 const project = JSON.parse(todo.project)

@@ -1,14 +1,14 @@
 import {createNewToDo} from './todo';
 import {createToDoCard, createProjectCard, clearToDos, toggleForm, toggleProjectForm} from './DOM';
 import {createNewProject} from './project';
-import { collection, deleteDoc, doc, getFirestore, query, onSnapshot, where, getDoc } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getFirestore, query, onSnapshot, where, getDoc, updateDoc } from 'firebase/firestore';
 import { firestore } from '.';
 
 //Creates new todo card when form is submitted
 async function addToDoFormSubmit(uid){
     console.log("form submitted")
     const newToDo =  await createNewToDo(uid)
-    createToDoCard(newToDo)
+    await createToDoCard(newToDo)
     const form = document.querySelector(".form")
     form.reset()
     
@@ -55,6 +55,7 @@ async function deleteToDo(todoCard, todo){
     todoCard.innerHTML = ""
     const docRef = await doc(firestore, "todos", todo.title)
     await deleteDoc(docRef)
+    console.log("todo deleted")
 }
 
 
@@ -73,7 +74,6 @@ function deleteProject(projectCard, project){
 
 //When edit button is pressed, display correct form
 function editToDo(todo, todoCard){
-    todoCard.innerText = ""
     const formHeader = document.querySelector(".form-header")
     const formBtn = document.querySelector(".submit")
     const titleInput = document.getElementById("title")
@@ -88,8 +88,8 @@ function editToDo(todo, todoCard){
     dateInput.value = todo.dueDate
     priorityInput.value = todo.priority
     notesInput.value = todo.notes
-    todoCard.innerText = ""
     toggleForm()
+    deleteToDo(todoCard, todo)
 
 }
 

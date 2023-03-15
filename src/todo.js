@@ -14,7 +14,7 @@ async function saveTodo(newTodo){
 }
 
 //Returns a todo object
-function createNewToDo(uid){
+async function createNewToDo(uid){
     const title = document.getElementById("title").value
     const description = document.getElementById("description").value
     const dueDate = document.getElementById("dueDate").value
@@ -25,7 +25,7 @@ function createNewToDo(uid){
     newToDo.project =  JSON.stringify(currentProject)
     newToDo.uid = uid
     if (uid){
-        const docRef =  saveTodo(newToDo)
+        await saveTodo(newToDo)
     }
     console.log("todo created")
     return newToDo

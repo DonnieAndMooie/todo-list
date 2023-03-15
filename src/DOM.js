@@ -92,13 +92,12 @@ function createToDoCard(todo, project){
     deleteBtn.classList.add("deleteBtn")
     todoCard.appendChild(deleteBtn)
 
-    deleteBtn.addEventListener("click", ()=>{
-        deleteToDo(todoCard, todo)
+    deleteBtn.addEventListener("click", async ()=>{
+        await deleteToDo(todoCard, todo)
     })
 
     editBtn.addEventListener("click", ()=>{
         editToDo(todo, todoCard)
-        localStorage.removeItem(todo.title)
     })
     
 
