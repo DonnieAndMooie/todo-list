@@ -1,9 +1,19 @@
 {
-  // If you went through the "Cloud Firestore Security Rules" step.
   "firestore": {
     "rules": "firestore.rules"
   },
   "hosting": {
-    "public": "./dist"
+    "public": "dist",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
   }
 }
