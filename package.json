@@ -4,9 +4,7 @@
   "description": "The aim of this project is to create a simple todo list app",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build -b master"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -18,7 +16,7 @@
   "bugs": {
     "url": "https://github.com/DonnieAndMooie/todo-list/issues"
   },
-  "homepage": "https://github.io/todo-list",
+  "homepage": "https://github.com/DonnieAndMooie/todo-list#readme",
   "devDependencies": {
     "css-loader": "^6.7.2",
     "style-loader": "^3.3.1",
@@ -28,7 +26,6 @@
   },
   "dependencies": {
     "date-fns": "^2.29.3",
-    "firebase": "^9.17.2",
-    "gh-pages": "^5.0.0"
+    "firebase": "^9.17.2"
   }
 }
