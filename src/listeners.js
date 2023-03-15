@@ -1,13 +1,13 @@
 import {createNewToDo} from './todo';
 import {createToDoCard, createProjectCard, clearToDos, toggleForm, toggleProjectForm} from './DOM';
 import {createNewProject} from './project';
-import { collection, deleteDoc, doc, getFirestore, query, onSnapshot, where, getDoc, updateDoc } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getFirestore, query, onSnapshot, where, getDoc, updateDoc, getDocs } from 'firebase/firestore';
 import { firestore } from '.';
 
 //Creates new todo card when form is submitted
 async function addToDoFormSubmit(uid){
-    console.log("form submitted")
     const newToDo =  await createNewToDo(uid)
+    newToDo.project = JSON.parse(newToDo.project).title
     await createToDoCard(newToDo)
     const form = document.querySelector(".form")
     form.reset()
@@ -55,13 +55,12 @@ async function deleteToDo(todoCard, todo){
     todoCard.innerHTML = ""
     const docRef = await doc(firestore, "todos", todo.title)
     await deleteDoc(docRef)
-    console.log("todo deleted")
 }
 
 
 
 //Delete Project
-function deleteProject(projectCard, project){
+async function deleteProject(projectCard, project){
     const todoCards = document.querySelectorAll(".card")
     for(const card of todoCards){
         const projectAttribute = card.getAttribute("project")
@@ -69,6 +68,14 @@ function deleteProject(projectCard, project){
             card.innerHTML = ""
         }
     }
+    const query = await getDocs(collection(firestore, "todos"))
+    query.forEach(async (document) => {
+        const todo = await document.data()
+        if (JSON.parse(todo.project).title === project.title){
+            const docRef = await doc(firestore, "todos", todo.title)
+            await deleteDoc(docRef)
+        }
+    })
     projectCard.innerText = ""
 }
 

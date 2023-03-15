@@ -8,7 +8,6 @@ function ToDoConstructor(title, description, dueDate, priority, notes){
 }
 
 async function saveTodo(newTodo){
-    console.log("saving todo")
     const docRef = await setDoc(doc(firestore, 'todos', newTodo.title), newTodo)
     return docRef
 }
@@ -27,7 +26,6 @@ async function createNewToDo(uid){
     if (uid){
         await saveTodo(newToDo)
     }
-    console.log("todo created")
     return newToDo
 }
 

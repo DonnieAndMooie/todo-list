@@ -7,7 +7,7 @@ import { changeProject } from './listeners';
 
 import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
-import { collection, addDoc, query, orderBy, limit, onSnapshot, setDoc, updateDoc, doc, serverTimestamp, getDoc, getFirestore } from 'firebase/firestore'
+import { collection, addDoc, query, orderBy, limit, onSnapshot, setDoc, updateDoc, doc, serverTimestamp, getDocs, getFirestore } from 'firebase/firestore'
 
 const firebaseConfig = {
     apiKey: "AIzaSyDQSMs0np2tg7IBCMYdAr2pmSBr3fXjzVw",
@@ -117,27 +117,25 @@ document.querySelector(".project").click()
 
 async function loadFromStorage(uid){
     const createdProjects = [defaultProject.title]
-    const todosQuery = await query(collection(getFirestore(), 'todos'))
-    await onSnapshot(todosQuery, function(snapshot) {
-        snapshot.docChanges().forEach(function(change){
-            if (change.type === "removed"){
-                return
+    const todosQuery = await getDocs(collection(getFirestore(), 'todos'))
+    todosQuery.forEach((doc) => {
+        const todo = doc.data()
+        if (todo.uid === uid){
+            const project = JSON.parse(todo.project)
+        if (!createdProjects.includes(project.title)){
+                createProjectCard(project)
+                createdProjects.push(project.title)
             }
-            const todo = change.doc.data()
-            if (todo.uid === uid){
-                const project = JSON.parse(todo.project)
-                if (!createdProjects.includes(project.title)){
-                    createProjectCard(project)
-                    createdProjects.push(project.title)
-                }
-                changeProject(project)
-                
-                createToDoCard(todo, project.title)
-            }
-        })
+            changeProject(project)
+            
+            createToDoCard(todo, project.title)
+        }
     })
+            
+        
+    
     changeProject(defaultProject)
-}
+    }
 
 
 function createArrayOfProjects(){
